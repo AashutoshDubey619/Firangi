@@ -1,0 +1,60 @@
+    <% layout("/layout/boilerplate.ejs") %>
+<body>
+    <br>
+
+    <div class="row">
+        <div class="col-8 offset-2">
+    <h2>Create a new Listing</h2>
+    <br>
+    <br>
+    <form method="post" action="/listings" class="needs-validation" novalidate>  
+         <div class="mb-3">
+             <label for="title" class="form-label">Title</label>
+            <input name="title" placeholder="Enter title" type="text" class="form-control" required />
+            <div class="valid-feedback">Title looks good !</div>
+            <div class="invalid-feedback">Enter a Valid Title</div>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" placeholder="Enter description" class="form-control"  required></textarea>
+            <div class="invalid-feedback">Enter Valid description</div>
+        </div>
+        
+        <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input name="image" placeholder="Enter image/url link" type="text" class="form-control"  required/>
+        <div class="invalid-feedback">Enter a Valid Image/url link</div>
+        </div>
+
+        <div class="row">
+               <div class="mb-3 col-md-4">
+        <label for="price" class="form-label">Price</label>
+        <input name="price" placeholder="Enter price" type="number"  class="form-control"  required/>
+        <div class="invalid-feedback">Price should be valid</div>
+    </div>
+    <div class="mb-3 col-md-8">
+        <label for="country" class="form-label">Country</label>
+        <input name="country" placeholder="Enter country" type="text"  class="form-control" required/>
+        <div class="invalid-feedback">Country should be valid</div>
+    </div>
+        </div>
+
+    <div class="mb-3">
+    <label for="location" class="form-label">Location</label>
+    <input name="location" placeholder="Enter location" type="text"  class="form-control" required />
+    <div class="invalid-feedback">Location should be valid</div>
+</div>
+    <br>
+    <br>
+        <button type="submit" class="btn btn-dark mb-3" >Save</button> 
+</form>
+
+</div>
+</div>
+</body>
+</html>
+
+
+ <!-- class="needs-validation" novalidate   : isse custom bootstrap validation add ho jata form pe ..badiya wala  -->
+  <!-- <div class="valid-feedback"></div>   : ye class tb use karte jab success pe msg bhjna ho-->
+  <!-- <div class="invalid-feedback"></div>   : ye class tb use karte jab failure pe msg bhjna ho-->

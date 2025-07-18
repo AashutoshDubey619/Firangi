@@ -1,0 +1,60 @@
+<% layout("/layout/boilerplate.ejs") %>
+<body>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-8 offset-2">       
+    <h2>Edit Listing</h2> 
+    <br>
+    <form method="post" action="/listings/<%=listing._id%>?_method=PUT" class="needs-validation" novalidate>
+        <div class="mb-3">
+             <label for="title" class="form-label">Title</label>
+            <input name="title" placeholder="Enter title" type="text" value="<%=listing.title%>" class="form-control" required/>
+             <div class="valid-feedback">Title looks good !</div>
+             <div class="invalid-feedback">Enter a Valid Title</div>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" placeholder="Enter description" class="form-control" required><%=listing.description%></textarea>
+            <div class="invalid-feedback">Enter a Valid description</div>
+        </div>
+        
+        <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input name="image" placeholder="Enter image/url link" value="<%=listing.image.url%>"  type="text" class="form-control" required/>
+        <div class="invalid-feedback">Valid Image/url required</div>
+        </div>
+
+        <div class="row">
+               <div class="mb-3 col-md-4">
+        <label for="price" class="form-label">Price</label>
+        <input name="price" placeholder="Enter price" type="number" value="<%=listing.price%>" class="form-control" required/>
+        <div class="invalid-feedback">Price should be valid</div>
+    </div>
+    <div class="mb-3 col-md-8">
+        <label for="country" class="form-label">Country</label>
+        <input name="country" placeholder="Enter country" type="text" value="<%=listing.country%>" class="form-control" required/>
+        <div class="invalid-feedback">Country should be valid</div>
+    </div>
+        </div>
+
+    <div class="mb-3">
+    <label for="location" class="form-label">Location</label>
+    <input name="location" placeholder="Enter location" type="text" value="<%=listing.location%>" class="form-control" required/>
+    <div class="invalid-feedback">Location should be valid</div>
+</div>
+    <br>
+        <button type="submit" class="btn btn-dark mb-3">Save</button> 
+    </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+ <!-- offset : left se space  -->
+  <!-- mb-3 : margin-bottom  -->
+
+<!-- col class ka use row ke andar kiya jaata hai to divide space into columns.
+Bootstrap grid system 12 columns pe based hota hai.
+Aap col, col-6, col-md-4 jaise classes se specify karte ho ki har column kitni width le. -->
