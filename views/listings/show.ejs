@@ -52,7 +52,7 @@
                 <div class="card col-sm-5 review-card" >
                     <div class="card-body">
                         <h5 class="card-title"><%=review.author.username%></h5>
-                        <p class="card-text">Rating : <%=review.rating%></p>
+                        <p class="card-text">Rating : <%=review.rating%> <i class="fa-solid fa-star"></i></p>
                         <p class="card-text"><%=review.comment%></p>
                     </div>
                     <% if(currUser && currUser._id.equals(review.author._id)){ %>

@@ -8,6 +8,7 @@ const Review = require("../Models/review.js");
 const flash = require("connect-flash");
 const {isLoggedIn} = require("../middleware.js");
 const {isAuthor} = require("../middleware.js");
+const reviewController = require("../controllers/review.js");
 
 const validateReview = (req,res,next) =>{
  let {error} = reviewSchema.validate(req.body);
@@ -25,47 +26,12 @@ const validateReview = (req,res,next) =>{
 // Reviews
 
 // create
-router.post("/" , isLoggedIn, validateReview, async (req,res)=>{
-      try{
-        let listing = await Listing.findById(req.params.id);
-
-        let newReview = new Review(req.body.review);
-
-        newReview.author = req.user._id;
-
-        listing.reviews.push(newReview);
-
-        await newReview.save();
-        await listing.save();
-
-        console.log("new review saved !");
-
-        req.flash("success" , "Review added successfully !");
-        res.redirect(`/listings/${listing._id}`);
-      }
-      catch(err){
-        next();
-      }   
-})
-
-
+router.post("/" , isLoggedIn, validateReview, reviewController.createReview);
 
 //delete
 // $pull operator : The $pull operator removes from an existing array all instances of a value or values that a match a specified condition.
 
-router.delete("/:reviewId" ,isLoggedIn , isAuthor,async(req,res)=>{
-         try{
-              let { id, reviewId } = req.params;
-               await Listing.findByIdAndUpdate(id,{$pull : {reviews : reviewId}});
-               await Review.findByIdAndDelete(reviewId);
-
-               req.flash("success" , "Review deleted successfully !");
-               res.redirect(`/listings/${id}`);
-         }
-        catch(err){
-          next(err);
-        }
-})
+router.delete("/:reviewId" ,isLoggedIn , isAuthor,reviewController.deleteReview);
 
 
 module.exports = router;
