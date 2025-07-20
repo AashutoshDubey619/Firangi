@@ -6,8 +6,8 @@ const ExpressError = require("../utils/ExpressError");
 const Listing = require("../Models/listing");
 const Review = require("../Models/review.js");
 const flash = require("connect-flash");
-
-
+const {isLoggedIn} = require("../middleware.js");
+const {isAuthor} = require("../middleware.js");
 
 const validateReview = (req,res,next) =>{
  let {error} = reviewSchema.validate(req.body);
@@ -25,11 +25,13 @@ const validateReview = (req,res,next) =>{
 // Reviews
 
 // create
-router.post("/" ,validateReview, async (req,res)=>{
+router.post("/" , isLoggedIn, validateReview, async (req,res)=>{
       try{
         let listing = await Listing.findById(req.params.id);
 
         let newReview = new Review(req.body.review);
+
+        newReview.author = req.user._id;
 
         listing.reviews.push(newReview);
 
@@ -51,7 +53,7 @@ router.post("/" ,validateReview, async (req,res)=>{
 //delete
 // $pull operator : The $pull operator removes from an existing array all instances of a value or values that a match a specified condition.
 
-router.delete("/:reviewId" ,async(req,res)=>{
+router.delete("/:reviewId" ,isLoggedIn , isAuthor,async(req,res)=>{
          try{
               let { id, reviewId } = req.params;
                await Listing.findByIdAndUpdate(id,{$pull : {reviews : reviewId}});

@@ -5,6 +5,8 @@ const ExpressError = require("../utils/ExpressError");
 const Listing = require("../Models/listing");
 const flash = require("connect-flash");
 const wrapAsync = require("../utils/wrapAsync.js");
+const {isLoggedIn} = require("../middleware.js");
+const {isOwner} = require("../middleware.js");
 
 const validateListing = (req,res,next) =>{
   let {error} = listingSchema.validate(req.body);
@@ -25,12 +27,12 @@ router.get("/" , async (req,res)=>{
 
 // create 
 
-router.get("/new" , (req,res)=>{
+router.get("/new" , isLoggedIn , (req,res)=>{
     res.render("listings/new.ejs");
 })
 
 
-router.post("/", validateListing, async(req, res) => {
+router.post("/", isLoggedIn,validateListing, async(req, res) => {
   try{
      let { title, description, image, price, location, country } = req.body;
 
@@ -45,6 +47,8 @@ router.post("/", validateListing, async(req, res) => {
     location,
     country,
   };
+
+  newListing.owner = req.user._id;
 
   await Listing.create(newListing);
 
@@ -63,7 +67,13 @@ router.post("/", validateListing, async(req, res) => {
 
 router.get("/:id" , wrapAsync(async(req,res)=>{
      let {id} = req.params;
-    let listing = await Listing.findById(id).populate("reviews");
+     let listing = await Listing.findById(id).populate({
+      path : "reviews",
+      populate : {                                // nested populate 
+        path : "author",
+      },
+     })
+     .populate("owner");
 
     if(!listing){
       req.flash("error" , "Listing you requested does not exist");
@@ -78,7 +88,7 @@ router.get("/:id" , wrapAsync(async(req,res)=>{
 
 // Edit
 
-router.get("/:id/edit" , async(req,res)=>{
+router.get("/:id/edit" ,isLoggedIn , isOwner,async(req,res)=>{
      let {id} = req.params;
      let listing = await Listing.findById(id);
      res.render("listings/edit" , {listing});
@@ -86,10 +96,16 @@ router.get("/:id/edit" , async(req,res)=>{
 
 // Update
 
-router.put("/:id" , async (req,res)=>{
+router.put("/:id" , isLoggedIn, isOwner, async (req,res)=>{
      let {id} = req.params;
        let {title,description,image,price,location,country} = req.body;
 
+       let listing = await Listing.findById(id);
+
+       if(!listing.owner.equals(res.locals.currUser._id)){
+           req.flash("error" , "You don't have permission to edit");
+           return res.redirect(`/listings/${id}`);
+       }
       await Listing.findByIdAndUpdate(id, {
             title,
             description,
@@ -110,7 +126,7 @@ router.put("/:id" , async (req,res)=>{
 
 // Delete 
 
-router.delete("/:id" ,async (req,res)=>{
+router.delete("/:id" ,isLoggedIn , isOwner,async (req,res)=>{
     let {id} = req.params;
 
     await Listing.findByIdAndDelete(id);
