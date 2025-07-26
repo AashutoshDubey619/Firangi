@@ -105,3 +105,64 @@ body{
     border-radius: 20px;
     margin: 15px;
 }
+
+
+@media (max-width: 768px) {
+    .navbar.sticky-top {
+        position: static;
+    }
+}
+
+
+.collapse.show {
+    display: block;
+    height: auto !important;
+    position: relative;
+    z-index: 1;
+    background-color: white;
+}
+
+.collapse:not(.show) {
+    display: none;
+    transition: height 0.3s ease;
+}
+
+
+.review-card {
+    border: none;
+    border-radius: 15px;
+    margin: 20px auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+.review-card .card-body {
+    padding: 20px;
+}
+
+.review-card .card-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.review-card .card-text {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.starability-result::before {
+    color: #ffc107;
+    font-size: 16px;
+}
+
+.review-card form {
+    text-align: right;
+    padding: 0 20px 15px 20px;
+}

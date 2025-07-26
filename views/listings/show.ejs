@@ -1,10 +1,10 @@
 <% layout("/layout/boilerplate.ejs") %>
 <body>
-        <div class="row">
+        <div class="row ">
             <div class="col-8 offset-2 mt-2">
                 <h2><%=listing.title%></h2>
             </div>
-            <div class="card col-6 offset-3 mt-3">
+            <div class="card col-12 col-md-6 offset-md-3 mt-3">
   <img src="<%=listing.image.url%>" class="card-img-top" alt="Listing_image" style="height: 20rem;"  />
   <div class="card-body">
       <p > Owned by : <i> <%=listing.owner.username%> </i></p>
@@ -30,11 +30,25 @@
         <div class="col-8 offset-2 mt-2">
              <h4>Leave a Review</h4>
              <form method="post" action="/listings/<%=listing._id%>/reviews" class="needs-validation" novalidate>
-                <div>
+                <!-- <div class="mb-3 mt-3">
                     <label for="rating" class="form-label">Rating</label>
                     <input type="range" min="0" max="5" name="review[rating]" class="form-range" required/>
-                    <div class="invalid-feedback">Rating should be between 1-5</div>
-                </div>
+                </div> -->
+                <div class="mb-3 mt-3">
+                <fieldset class="starability-slot">
+                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
+                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                    <label for="first-rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                    <label for="first-rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                    <label for="first-rate3" title="Average">3 stars</label>
+                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                    <label for="first-rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                    <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                    </div>
                 <div>
                     <label for="comment" class="form-label">Comments</label>
                     <textarea name="review[comment]" id="comment" cols="10" rows="5" placeholder="Comment here..." class="form-control mb-3" required></textarea>
@@ -52,7 +66,7 @@
                 <div class="card col-sm-5 review-card" >
                     <div class="card-body">
                         <h5 class="card-title"><%=review.author.username%></h5>
-                        <p class="card-text">Rating : <%=review.rating%> <i class="fa-solid fa-star"></i></p>
+                        <p class="starability-result" data-rating=<%=review.rating%>></p>
                         <p class="card-text"><%=review.comment%></p>
                     </div>
                     <% if(currUser && currUser._id.equals(review.author._id)){ %>
@@ -67,3 +81,6 @@
     </div>
 </body>
 </html>
+
+
+<!--Library for rating design : starability-->

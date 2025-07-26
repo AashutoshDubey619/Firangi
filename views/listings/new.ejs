@@ -19,11 +19,11 @@
             <textarea name="description" placeholder="Enter description" class="form-control"  required></textarea>
             <div class="invalid-feedback">Enter Valid description</div>
         </div>
-        
+
         <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        <input name="image" placeholder="Enter image/url link" type="text" class="form-control"  required/>
-        <div class="invalid-feedback">Enter a Valid Image/url link</div>
+        <label for="image" class="form-label">Image URL</label>
+        <input name="image"  type="text" class="form-control" placeholder="Enter url here"  required/>
+        <div class="invalid-feedback">Enter a Valid Image URL</div>
         </div>
 
         <div class="row">
@@ -58,3 +58,6 @@
  <!-- class="needs-validation" novalidate   : isse custom bootstrap validation add ho jata form pe ..badiya wala  -->
   <!-- <div class="valid-feedback"></div>   : ye class tb use karte jab success pe msg bhjna ho-->
   <!-- <div class="invalid-feedback"></div>   : ye class tb use karte jab failure pe msg bhjna ho-->
+
+  <!-- enctype-"multipart/form-data"   :   Jab bhi files ko sent karna ho html form me -->
+   <!-- Multer package : used for uploading files -->

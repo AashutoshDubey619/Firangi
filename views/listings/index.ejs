@@ -1,11 +1,112 @@
 <% layout("/layout/boilerplate.ejs") %> 
-    <h1 class="mt-3">All Listings</h1>
+    <!-- <h1 class="mt-3">All Listings</h1> -->
     <br>
     <!-- <form method="get" action="/listings/new">
         <button type="submit">Create new Listing</button>
     </form> -->
+    <style>
+ #filters{
+    display: flex;
+    flex-wrap: nowrap;  
+    gap: 20px;
+    overflow-x: auto;  
+    padding: 10px 20px;
+    scrollbar-width: none;  
+}
 
-    
+.filters-container::-webkit-scrollbar {
+    display: none;  
+}
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    min-width: 70px;   
+    flex: 0 0 auto;
+}
+
+.filter div {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.filter:hover {
+    color: #fe424d;
+}
+
+
+@media (min-width: 992px) {
+    .filters-container {
+        flex-wrap: wrap;  
+        justify-content: center;
+        overflow-x: hidden;  
+    }
+}
+
+
+    </style>
+    <div id="filters">
+      <div class="filter">
+        <div><i class="fa-solid fa-fire"></i></div>
+         <p>Trending</p>
+      </div>
+      <div class="filter">
+        <div ><i class="fa-solid fa-bed"></i></div>
+         <p>Rooms</p>
+      </div>
+       <div class="filter">
+        <div><i class="fa-solid fa-umbrella-beach"></i></div>
+        <p>Beach</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-mountain"></i></div>
+        <p>Mountains</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-house-chimney"></i></div>
+        <p>Cottages</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-city"></i></div>
+        <p>City View</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-water-ladder"></i></div>
+        <p>Pool Villas</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-leaf"></i></div>
+        <p>Nature Stay</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-campground"></i></div>
+        <p>Camps</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-utensils"></i></div>
+        <p>Meals</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-square-parking"></i></div>
+        <p>Parking</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-dog"></i></div>
+        <p>Pet-Friendly</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-champagne-glasses"></i></div>
+        <p>Luxury</p>
+    </div>
+    <div class="filter">
+        <div><i class="fa-solid fa-plane-departure"></i></div>
+        <p>Near Airport</p>
+    </div>
+    </div>
  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
     <% for(let listing of allLists) { %>
         <a href="/listings/<%=listing._id%>" style="text-decoration: none;">

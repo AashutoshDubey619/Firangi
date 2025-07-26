@@ -14,9 +14,12 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const User = require("./Models/user.js");
 const LocalStratergy = require("passport-local");
+const multer = require("multer");
+const upload = multer({dest : "uploads/"});
 
-
-
+if(process.env.NODE_ENV != "production"){
+    require('dotenv').config();
+}
 
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/firangi";

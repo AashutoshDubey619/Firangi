@@ -2,38 +2,53 @@ const Listing = require("../Models/listing");
 
 
 module.exports.index = async(req,res) =>{
-         const allLists = await Listing.find({})
-         res.render("listings/index.ejs" , {allLists});
+  const { search } = req.query;
+  let allLists;
+  if(search){
+    const regex = new RegExp(escapeRegex(search), 'i'); // case-insensitive
+    allLists = await Listing.find({ title: regex });
+  } else {
+    allLists = await Listing.find({});
+  }
+  res.render("listings/index.ejs" , {allLists});
 };
+
+// Helper function to escape special characters in regex
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports.renderNewForm = (req,res)=>{
     res.render("listings/new.ejs");
 };
 
 
-module.exports.createNewListing = async(req, res) => {
+module.exports.createNewListing = async(req, res, next) => {
   try{
-     let { title, description, image, price, location, country } = req.body;
+    console.log("req.file:", req.file);
+    console.log("req.body:", req.body);
 
-  const newListing = {
-    title,
-    description,
-    image: {
-      filename: "listingimage",
-      url: image,
-    },
-    price,
-    location,
-    country,
-  };
+    let { title, description, price, location, country } = req.body;
 
-  newListing.owner = req.user._id;
+    const newListing = {
+      title,
+      description,
+      image: {
+        filename: req.file ? req.file.filename : "defaultimage",
+        url: req.file ? req.file.path : "https://images.unsplash.com/photo-1750672951701-b9dcb289ea29?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      },
+      price,
+      location,
+      country,
+    };
 
-  await Listing.create(newListing);
+    newListing.owner = req.user._id;
 
-  req.flash("success" , "New Listing created !");
+    await Listing.create(newListing);
 
-  res.redirect("/listings");
+    req.flash("success" , "New Listing created !");
+
+    res.redirect("/listings");
   }
   catch(err){
     next(err);
