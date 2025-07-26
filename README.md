@@ -2,6 +2,8 @@
 
 Firangi is a Full stack web application for listing and exploring rental properties and accommodations. Users can browse listings, create new listings, leave reviews, and manage their accounts.
 
+# Live Link : https://firangi-web.onrender.com
+
 ## Features
 
 - User authentication with Passport.js (signup, login, logout)
