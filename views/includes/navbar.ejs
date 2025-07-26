@@ -1,4 +1,4 @@
-<!-- <style>
+<style>
     .btn-search{
       background-color: #fe424d;
       color: white;
@@ -53,69 +53,6 @@
     </div>
   </div>
 </nav>
-      
- -->
+      \
 
 
- <style>
-    .btn-search {
-        background-color: #fe424d;
-        color: white;
-        border-radius: 25px;
-        padding: 0 1rem;
-    }
-
-    .btn-search:hover {
-        background-color: #fe424d;
-        color: white;
-    }
-
-    .btn-search i {
-        display: inline;
-        margin-right: 0.5rem;
-    }
-
-    .search-inp {
-        border-radius: 25px;
-        padding: 0.5rem 3rem;
-    }
-</style>
-
-<nav class="navbar navbar-expand-md bg-light border-bottom sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
-
-        <!-- Toggler only for Left nav items -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#leftNavItems">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Collapsing only Explore & List your place -->
-        <div class="collapse navbar-collapse" id="leftNavItems">
-            <div class="navbar-nav">
-                <a class="nav-link" href="/listings">Explore</a>
-                <a class="nav-link" href="/listings/new">List your place</a>
-            </div>
-        </div>
-
-        <!-- Right Side Content (Always Visible) -->
-        <div class="d-flex ms-auto align-items-center">
-            <!-- Search Form -->
-            <form class="d-flex me-3" role="search" action="/listings" method="GET">
-                <input class="form-control me-2 search-inp" type="search" name="search" placeholder="Search destinations" aria-label="Search" />
-                <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-            </form>
-
-            <!-- Login / Signup Buttons -->
-            <div class="navbar-nav d-flex flex-row">
-                <% if (!currUser) { %>
-                    <a class="nav-link me-2" href="/signup"><b>Signup</b></a>
-                    <a class="nav-link" href="/login"><b>Login</b></a>
-                <% } %>
-                <% if (currUser) { %>
-                    <a class="nav-link" href="/logout">Logout</a>
-                <% } %>
-            </div>
-        </div>
-    </div>
-</nav>
