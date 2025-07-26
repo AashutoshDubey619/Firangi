@@ -10,6 +10,7 @@ const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 const usersroute = require("./routes/userrouter.js");0
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const User = require("./Models/user.js");
@@ -22,7 +23,8 @@ if(process.env.NODE_ENV != "production"){
 }
 
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/firangi";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/firangi";
+const dbUrl = process.env.ATLASDB_URL;
 
 app.set("view engine" , "ejs");
 app.set("views" , path.join(__dirname,"views"));
@@ -40,14 +42,26 @@ main()
 })
 
 async function main() {
-        await mongoose.connect(MONGO_URL);
+        await mongoose.connect(dbUrl);
 }
 
 
+const store = MongoStore.create({
+    mongoUrl : dbUrl,
+    crypto :{
+        secret : process.env.SECRET,
+    },
+    touchAfter : 24*3600,                                    // Interval (in seconds) between session updates.
+});
 
+
+store.on("error" , ()=>{
+    console.log("Error in session store" , err);
+})
 
 const sessionOptions = {
-    secret : "mysupersecretcode",
+    store,
+    secret : process.env.SECRET,
     resave : false,
     saveUninitialized : true,
     
@@ -57,6 +71,7 @@ const sessionOptions = {
         httpOnly : true,
     }
 };
+
 
 app.listen("8080" , ()=>{
     console.log("Server is listening to port 8080");
@@ -88,17 +103,6 @@ app.use((req,res,next)=>{
 });
 
 
-// app.get("/demouser" , async(req,res)=>{
-//     let fakeUser = new User({
-//         email : "ass@gmail.com",
-//         username : "Aashu",
-//     });
-
-
-//   const Reguser =  await User.register(fakeUser , "aashu12345");
-//   res.send(Reguser);
-// })
-
 
 
 
@@ -107,9 +111,7 @@ app.use("/listings" , listings);
 app.use("/listings/:id/reviews" , reviews);
 app.use("/" , usersroute);
 
-// app.all("*" , (req,res,next)=>{      // agar koi route nhi mila to yaha aata 
-//     next(new ExpressError(404,"Page not found !"));
-// });
+
 
 
 
