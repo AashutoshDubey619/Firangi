@@ -25,8 +25,6 @@ module.exports.renderNewForm = (req,res)=>{
 
 module.exports.createNewListing = async(req, res, next) => {
   try{
-    console.log("req.file:", req.file);
-    console.log("req.body:", req.body);
 
     let { title, description, price, location, country } = req.body;
 
