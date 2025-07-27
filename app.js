@@ -2,127 +2,118 @@ const express = require("express");
 const app = express();
 const methodOverride = require("method-override");
 const mongoose = require("mongoose");
-const Listing = require("./Models/listing");
 const path = require("path");
 const ejsMate = require("ejs-mate");
-const Review = require("./Models/review");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
-const usersroute = require("./routes/userrouter.js");0
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
-const User = require("./Models/user.js");
-const LocalStratergy = require("passport-local");
+const LocalStrategy = require("passport-local");
 const multer = require("multer");
-const upload = multer({dest : "uploads/"});
+const upload = multer({ dest: "uploads/" });
+const dotenv = require('dotenv');
 
-if(process.env.NODE_ENV != "production"){
-    require('dotenv').config();
+// Models and Routes
+const Listing = require("./Models/listing");
+const Review = require("./Models/review");
+const User = require("./Models/user.js");
+const listings = require("./routes/listing.js");
+const reviews = require("./routes/review.js");
+const usersroute = require("./routes/userrouter.js");
+
+// Load environment variables
+if (process.env.NODE_ENV !== "production") {
+    dotenv.config();
 }
 
-
-// const MONGO_URL = "mongodb://127.0.0.1:27017/firangi";
+// Database Connection
 const dbUrl = process.env.ATLASDB_URL;
 
-app.set("view engine" , "ejs");
-app.set("views" , path.join(__dirname,"views"));
-app.use(express.urlencoded({extended : true}));
-app.use(methodOverride('_method'));
-app.engine('ejs' , ejsMate);
-app.use(express.static(path.join(__dirname,"/public")));
-
 main()
-.then(()=>{
-    console.log("Connection Successfull!");
-})
-.catch((err)=>{
-    console.log(err);
-})
+    .then(() => {
+        console.log("Connection Successful!");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 async function main() {
-        await mongoose.connect(dbUrl);
+    await mongoose.connect(dbUrl);
 }
 
+// App Configuration
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.engine('ejs', ejsMate);
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, "/public")));
 
+// Session Store
 const store = MongoStore.create({
-    mongoUrl : dbUrl,
-    crypto :{
-        secret : process.env.SECRET,
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
     },
-    touchAfter : 24*3600,                                    // Interval (in seconds) between session updates.
+    touchAfter: 24 * 3600,  // Time in seconds
 });
-
 
 store.on("error", (err) => {
     console.log("Error in session store", err);
 });
 
-
 const sessionOptions = {
     store,
-    secret : process.env.SECRET,
-    resave : false,
-    saveUninitialized : true,
-    
-    cookie :{
-        expires : Date.now() + 7 *24* 60 *60 *1000,  // expires after a week
-        maxAge :  7 *24* 60 *60 *1000,
-        httpOnly : true,
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 1 week
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
     }
 };
 
-
-const port = process.env.PORT || 8080;
-
-app.listen(port, () => {
-    console.log(`Server is listening to port ${port}`);
-});
-
-
-app.get("/" , (req,res)=>{
-    res.redirect("/listings");
-})
-
-
-
+// Session & Flash Middleware (IMPORTANT ORDER)
 app.use(session(sessionOptions));
 app.use(flash());
 
-
+// Passport.js Configuration
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStratergy(User.authenticate()));
-
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
-app.use((req,res,next)=>{
+// Global Variables for Templates
+app.use((req, res, next) => {
+    console.log("Middleware: req.user =", req.user);
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    res.locals.currUser = req.user;
-    next();         // Important...nhi to isi middleware me stuck ho jayega 
+    res.locals.currUser = req.user || null;
+    console.log("Middleware: res.locals.currUser =", res.locals.currUser);
+    next();
 });
 
+// Routes
+app.use("/listings", listings);
+app.use("/listings/:id/reviews", reviews);
+app.use("/", usersroute);
 
+// Root Redirect
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
 
+// Error Handler Middleware
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = "Something went Wrong!";
+    res.status(statusCode).render("error.ejs", { err });
+});
 
-
-
-app.use("/listings" , listings);
-app.use("/listings/:id/reviews" , reviews);
-app.use("/" , usersroute);
-
-
-
-
-
-// error handler
-app.use((err,req,res,next)=>{
-    let {statusCode = 500 , message = "Something went Wrong !"} = err;
-    res.status(statusCode).render("error.ejs" , {err});
-    // res.status(statusCode).send(message);
-}
-);
+// Server Listener
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
+});
