@@ -1,0 +1,10 @@
+<% layout('layout/boilerplate') %>
+<h1>Test Page</h1>
+
+<% if (typeof currUser !== 'undefined') { %>
+    <% if (!currUser) { %>
+        <a href="/login">Login</a>
+    <% } else { %>
+        <a href="/logout">Logout</a>
+    <% } %>
+<% } %>

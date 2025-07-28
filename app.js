@@ -45,6 +45,7 @@ async function main() {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine('ejs', ejsMate);
+app.locals.layout = 'layout/boilerplate';
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, "/public")));
@@ -64,7 +65,7 @@ store.on("error", (err) => {
 
 const sessionOptions = {
     store,
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || "secret",
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -95,12 +96,20 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
 // Routes
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
 app.use("/", usersroute);
 
-// Root Redirect
+
+app.get("/test", (req, res) => {
+    console.log("Route /test: req.user =", req.user);
+    res.render("test"); // Your test.ejs should include the navbar
+});
+
+
 app.get("/", (req, res) => {
     res.redirect("/listings");
 });

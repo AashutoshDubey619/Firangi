@@ -32,7 +32,7 @@ async function initdb() {
   await Listing.deleteMany({});
 
   
-  const ownerId = "688481dc1dbd16a17ca20638";
+  const ownerId = "688712cfd557f04f25504a7f";
 
   const dataWithOwner = initdata.data.map((obj) => ({
     ...obj,
