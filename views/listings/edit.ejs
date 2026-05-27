@@ -1,55 +1,76 @@
 <% layout("/layout/boilerplate.ejs") %>
-<body>
     <br>
     <br>
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-8 offset-2">       
-    <h2>Edit Listing</h2> 
-    <br>
-    <form method="post" action="/listings/<%=listing._id%>?_method=PUT" class="needs-validation" novalidate>
+            <div class="card shadow-sm border-0" style="border-radius: 16px;">
+                <div class="card-body p-4 p-md-5">
+                    <h3 class="mb-4 text-center">Edit Listing</h3> 
+    <form method="post" action="/listings/<%=listing._id%>?_method=PUT" class="needs-validation" enctype="multipart/form-data" novalidate>
         <div class="mb-3">
-             <label for="title" class="form-label">Title</label>
+             <label for="title" class="form-label fw-semibold">Title</label>
             <input name="title" placeholder="Enter title" type="text" value="<%=listing.title%>" class="form-control" required/>
              <div class="valid-feedback">Title looks good !</div>
              <div class="invalid-feedback">Enter a Valid Title</div>
         </div>
         <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea name="description" placeholder="Enter description" class="form-control" required><%=listing.description%></textarea>
+            <label for="description" class="form-label fw-semibold">Description</label>
+            <textarea name="description" placeholder="Enter description" class="form-control" rows="4" required><%=listing.description%></textarea>
             <div class="invalid-feedback">Enter a Valid description</div>
         </div>
         
-        <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        <input name="image" placeholder="Enter image/url link" value="<%=listing.image.url%>"  type="text" class="form-control" required/>
-        <div class="invalid-feedback">Valid Image/url required</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="image" class="form-label fw-semibold">Upload New Image</label>
+                <input name="image" type="file" class="form-control" />
+                <small class="text-muted">Optional: Upload from device</small>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="imageLink" class="form-label fw-semibold">Or New Image URL</label>
+                <input name="imageLink" type="text" placeholder="https://..." class="form-control" />
+                <small class="text-muted">Optional: Paste an image link</small>
+            </div>
         </div>
 
         <div class="row">
                <div class="mb-3 col-md-4">
-        <label for="price" class="form-label">Price</label>
+        <label for="price" class="form-label fw-semibold">Price (₹/night)</label>
         <input name="price" placeholder="Enter price" type="number" value="<%=listing.price%>" class="form-control" required/>
         <div class="invalid-feedback">Price should be valid</div>
     </div>
     <div class="mb-3 col-md-8">
-        <label for="country" class="form-label">Country</label>
+        <label for="country" class="form-label fw-semibold">Country</label>
         <input name="country" placeholder="Enter country" type="text" value="<%=listing.country%>" class="form-control" required/>
         <div class="invalid-feedback">Country should be valid</div>
     </div>
         </div>
 
-    <div class="mb-3">
-    <label for="location" class="form-label">Location</label>
-    <input name="location" placeholder="Enter location" type="text" value="<%=listing.location%>" class="form-control" required/>
-    <div class="invalid-feedback">Location should be valid</div>
-</div>
-    <br>
-        <button type="submit" class="btn btn-dark mb-3">Save</button> 
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="location" class="form-label fw-semibold">Location / City</label>
+            <input name="location" placeholder="Enter location" type="text" value="<%=listing.location%>" class="form-control" required/>
+            <div class="invalid-feedback">Location should be valid</div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <label for="category" class="form-label fw-semibold">Category</label>
+            <select name="category" class="form-select" required>
+                <option value="" disabled>Choose a category</option>
+                <% for(let cat of categories) { %>
+                    <option value="<%= cat %>" <%= listing.category === cat ? 'selected' : '' %>><%= cat %></option>
+                <% } %>
+            </select>
+            <div class="invalid-feedback">Please select a category</div>
+        </div>
+    </div>
+    
+        <div class="d-grid mt-2">
+            <button type="submit" class="btn btn-dark btn-lg py-2">Save Changes</button> 
+        </div>
     </form>
         </div>
     </div>
-</body>
-</html>
+    </div>
+</div>
 
 
  <!-- offset : left se space  -->

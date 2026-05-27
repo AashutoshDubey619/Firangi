@@ -26,6 +26,11 @@ const listingSchema = new mongoose.Schema({
   price: Number,
   location: String,
   country: String,
+  category: {
+    type: String,
+    enum: ['Trending', 'Rooms', 'Beach', 'Mountains', 'Cottages', 'City View', 'Pool Villas', 'Nature Stay', 'Camps', 'Meals', 'Parking', 'Pet-Friendly', 'Luxury', 'Near Airport'],
+    default: 'Rooms',
+  },
   reviews : [
     {
       type : mongoose.Schema.Types.ObjectId,
@@ -37,9 +42,12 @@ const listingSchema = new mongoose.Schema({
     ref : "User"
   }
 });
+// Indexes for search and performance
+listingSchema.index({ title: 'text', location: 'text', country: 'text' });
+listingSchema.index({ price: 1 });
+listingSchema.index({ category: 1 });
 
-
-// ye middleware hai ...jaise hi delete listing hoga uske baad ye run hoga aur us listing ke pure reviews delete kar dega 
+// ye middleware hai ...jaise hi delete listing hoga uske baad ye run hoga aur us listing ke pure reviews delete kar dega
 listingSchema.post("findOneAndDelete" , async(listing)=>{
 
   if(listing){

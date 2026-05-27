@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const initdata = require("./data.js");
-const Listing = require("./Models/listing.js");
+const Listing = require("../models/listing.js");
 require('dotenv').config();
 
 const dbURL = process.env.ATLASDB_URL;
@@ -34,9 +34,12 @@ async function initdb() {
   
   const ownerId = "68f5cb55914c16cde7a44d4a";
 
+  const categories = ['Trending', 'Rooms', 'Beach', 'Mountains', 'Cottages', 'City View', 'Pool Villas', 'Nature Stay', 'Camps', 'Meals', 'Parking', 'Pet-Friendly', 'Luxury', 'Near Airport'];
+
   const dataWithOwner = initdata.data.map((obj) => ({
     ...obj,
     owner: ownerId,
+    category: categories[Math.floor(Math.random() * categories.length)]
   }));
 
   await Listing.insertMany(dataWithOwner);
