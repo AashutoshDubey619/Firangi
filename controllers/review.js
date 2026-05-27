@@ -1,8 +1,8 @@
-const Listing = require("../Models/listing");
-const Review = require("../Models/review");
+const Listing = require("../models/listing");
+const Review = require("../models/review");
 
 
-module.exports.createReview = async (req,res)=>{
+module.exports.createReview = async (req,res,next)=>{
       try{
         let listing = await Listing.findById(req.params.id);
 
@@ -15,18 +15,16 @@ module.exports.createReview = async (req,res)=>{
         await newReview.save();
         await listing.save();
 
-        console.log("new review saved !");
-
         req.flash("success" , "Review added successfully !");
         res.redirect(`/listings/${listing._id}`);
       }
       catch(err){
-        next();
+        next(err);
       }   
 };
 
 
-module.exports.deleteReview = async(req,res)=>{
+module.exports.deleteReview = async(req,res,next)=>{
          try{
               let { id, reviewId } = req.params;
                await Listing.findByIdAndUpdate(id,{$pull : {reviews : reviewId}});

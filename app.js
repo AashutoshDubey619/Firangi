@@ -9,14 +9,14 @@ const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const dotenv = require('dotenv');
 
 // Models and Routes
-const Listing = require("./Models/listing");
-const Review = require("./Models/review");
-const User = require("./Models/user.js");
+const Listing = require("./models/listing");
+const Review = require("./models/review");
+const User = require("./models/user.js");
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 const usersroute = require("./routes/userrouter.js");
@@ -86,13 +86,21 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Security middlewares
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
 // Global Variables for Templates
 app.use((req, res, next) => {
-    console.log("Middleware: req.user =", req.user);
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user || null;
-    console.log("Middleware: res.locals.currUser =", res.locals.currUser);
+    // Use req.user directly — Passport already deserializes the full document
+    res.locals.wishlist = (req.user && req.user.wishlist) 
+        ? req.user.wishlist.map(id => id.toString()) 
+        : [];
     next();
 });
 
@@ -122,7 +130,7 @@ app.use((err, req, res, next) => {
 });
 
 // Server Listener
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });

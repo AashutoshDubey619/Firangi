@@ -1,43 +1,77 @@
-const Listing = require("../Models/listing");
-
-
-module.exports.index = async(req,res) =>{
-  const { search } = req.query;
-  let allLists;
-  if(search){
-    const regex = new RegExp(escapeRegex(search), 'i'); // case-insensitive
-    allLists = await Listing.find({ title: regex });
-  } else {
-    allLists = await Listing.find({});
-  }
-  res.render("listings/index.ejs" , {allLists});
-};
+const Listing = require("../models/listing");
 
 // Helper function to escape special characters in regex
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
 
+// Valid categories list (shared with model)
+const CATEGORIES = ['Trending', 'Rooms', 'Beach', 'Mountains', 'Cottages', 'City View', 'Pool Villas', 'Nature Stay', 'Camps', 'Meals', 'Parking', 'Pet-Friendly', 'Luxury', 'Near Airport'];
+
+module.exports.index = async(req,res) =>{
+  const { search, category, page: pageQuery } = req.query;
+
+  // Build filter object
+  let filter = {};
+
+  // Search across title, location, and country
+  if(search){
+    const regex = new RegExp(escapeRegex(search), 'i');
+    filter.$or = [
+      { title: regex },
+      { location: regex },
+      { country: regex },
+    ];
+  }
+
+  // Category filter
+  if(category && CATEGORIES.includes(category)){
+    filter.category = category;
+  }
+
+  // Pagination
+  const page = parseInt(pageQuery) || 1;
+  const limit = 12;
+  const skip = (page - 1) * limit;
+
+  const totalListings = await Listing.countDocuments(filter);
+  const totalPages = Math.ceil(totalListings / limit);
+
+  const allLists = await Listing.find(filter)
+    .skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 }); // newest first
+
+  res.render("listings/index.ejs", {
+    allLists,
+    search: search || "",
+    category: category || "",
+    currentPage: page,
+    totalPages,
+  });
+};
+
+
 module.exports.renderNewForm = (req,res)=>{
-    res.render("listings/new.ejs");
+    res.render("listings/new.ejs", { categories: CATEGORIES });
 };
 
 
 module.exports.createNewListing = async(req, res, next) => {
   try{
-
-    let { title, description, price, location, country } = req.body;
+    let { title, description, price, location, country, category } = req.body;
 
     const newListing = {
       title,
       description,
       image: {
         filename: req.file ? req.file.filename : "defaultimage",
-        url: req.file ? req.file.path : "https://images.unsplash.com/photo-1750672951701-b9dcb289ea29?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        url: req.file ? req.file.path : (req.body.imageLink || "https://images.unsplash.com/photo-1750672951701-b9dcb289ea29?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
       },
       price,
       location,
       country,
+      category: category || "Rooms",
     };
 
     newListing.owner = req.user._id;
@@ -67,7 +101,7 @@ module.exports.showListing = async(req,res)=>{
 
     if(!listing){
       req.flash("error" , "Listing you requested does not exist");
-      res.redirect("/listings");
+      return res.redirect("/listings");
     }
 
 
@@ -78,31 +112,36 @@ module.exports.showListing = async(req,res)=>{
 module.exports.editListing = async(req,res)=>{
      let {id} = req.params;
      let listing = await Listing.findById(id);
-     res.render("listings/edit" , {listing});
+     if(!listing){
+       req.flash("error" , "Listing you requested does not exist");
+       return res.redirect("/listings");
+     }
+     res.render("listings/edit" , {listing, categories: CATEGORIES});
 };
 
 
 module.exports.updateListing = async (req,res)=>{
      let {id} = req.params;
-       let {title,description,image,price,location,country} = req.body;
+       let {title,description,price,location,country,category} = req.body;
 
-       let listing = await Listing.findById(id);
-
-       if(!listing.owner.equals(res.locals.currUser._id)){
-           req.flash("error" , "You don't have permission to edit");
-           return res.redirect(`/listings/${id}`);
-       }
-      await Listing.findByIdAndUpdate(id, {
+       let updateData = {
             title,
             description,
-            image: {
-              filename: "listingimage",
-              url: image
-            },
             price,
             location,
-            country
-});
+            country,
+            category: category || "Rooms",
+       };
+
+       if (typeof req.file !== "undefined") {
+          let url = req.file.path;
+          let filename = req.file.filename;
+          updateData.image = { url, filename };
+       } else if (req.body.imageLink) {
+          updateData.image = { url: req.body.imageLink, filename: "defaultimage" };
+       }
+
+      await Listing.findByIdAndUpdate(id, updateData);
 
 
      req.flash("success" , "Listing Updated !");

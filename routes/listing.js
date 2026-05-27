@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const {listingSchema , reviewSchema} = require("../schema.js");
 const ExpressError = require("../utils/ExpressError");
-const Listing = require("../Models/listing");
+const Listing = require("../models/listing");
 const flash = require("connect-flash");
 const wrapAsync = require("../utils/wrapAsync.js");
-const {isLoggedIn} = require("../middleware.js");
-const {isOwner} = require("../middleware.js");
+const {isLoggedIn} = require("../middleware");
+const {isOwner} = require("../middleware");
 const listingController = require("../controllers/listing.js");
 const multer = require("multer");
 const {storage} = require("../cloudconfig.js");
@@ -32,6 +32,7 @@ router
     .get(listingController.index)       // homepage
     .post(
        isLoggedIn,
+       upload.single('image'),
        validateListing,
        listingController.createNewListing
     );
@@ -44,7 +45,7 @@ router
 router
     .route("/:id")
     .get( listingController.showListing)        // read
-    .put( isLoggedIn, isOwner, listingController.updateListing)      // update
+    .put( isLoggedIn, isOwner, upload.single('image'), listingController.updateListing)      // update
     .delete(isLoggedIn , isOwner,listingController.deleteListing);      // Delete 
 
 // create 

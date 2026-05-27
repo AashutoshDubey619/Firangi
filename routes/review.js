@@ -3,11 +3,11 @@ const express = require("express");
 const router = express.Router({mergeParams : true});
 const {listingSchema , reviewSchema} = require("../schema.js");
 const ExpressError = require("../utils/ExpressError");
-const Listing = require("../Models/listing");
-const Review = require("../Models/review.js");
+const Listing = require("../models/listing");
+const Review = require("../models/review.js");
 const flash = require("connect-flash");
-const {isLoggedIn} = require("../middleware.js");
-const {isAuthor} = require("../middleware.js");
+const {isLoggedIn} = require("../middleware");
+const {isAuthor} = require("../middleware");
 const reviewController = require("../controllers/review.js");
 
 const validateReview = (req,res,next) =>{

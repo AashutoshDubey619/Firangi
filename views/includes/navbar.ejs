@@ -1,29 +1,5 @@
-<style>
-    .btn-search {
-        background-color: #fe424d;
-        color: white;
-        border-radius: 25px;
-        padding: 0 1rem 0 1rem;
-    }
 
-    .btn-search:hover {
-        background-color: #fe424d;
-        color: white;
-    }
-
-    .btn-search i {
-        display: inline;
-        margin-right: 0.5rem;
-    }
-
-    .search-inp {
-        border-radius: 25px;
-        padding: 0.5rem 3rem 0.5rem 3rem;
-    }
-</style>
-
-
-<nav class="navbar navbar-expand-md bg-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md border-bottom sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
@@ -43,11 +19,22 @@
                 </form>
             </div>
 
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto d-flex align-items-center">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
 <% if (typeof currUser === 'undefined' || !currUser) { %>
                     <a class="nav-link" href="/signup"><b>Signup</b></a>
                     <a class="nav-link" href="/login"><b>Login</b></a>
                 <% } else { %>
+                    <a class="nav-link" href="/wishlist" title="My Wishlist">
+                        <i class="fa-solid fa-heart" style="color: #fe424d;"></i>
+                    </a>
+                    <a class="nav-link d-flex align-items-center" href="/profile" style="padding: 0;">
+                        <span style="width: 32px; height: 32px; border-radius: 50%; background-color: #fe424d; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold;">
+                            <%= currUser.username.charAt(0).toUpperCase() %>
+                        </span>
+                    </a>
                     <a class="nav-link" href="/logout">Logout</a>
                 <% } %>
             </div>

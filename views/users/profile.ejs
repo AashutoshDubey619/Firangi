@@ -1,0 +1,82 @@
+<% layout("/layout/boilerplate.ejs") %>
+
+<div class="row mt-4">
+    <div class="col-10 offset-1 col-md-8 offset-md-2">
+        
+        <!-- Profile Header -->
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #fe424d; color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
+                    <%= currUser.username.charAt(0).toUpperCase() %>
+                </div>
+                <h3><%= currUser.username %></h3>
+                <p class="text-muted"><%= currUser.email %></p>
+            </div>
+        </div>
+
+        <!-- My Listings -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>My Listings (<%= myListings.length %>)</h4>
+                <a href="/listings/new" class="btn btn-dark btn-sm">+ New Listing</a>
+            </div>
+
+            <% if(myListings.length === 0) { %>
+                <div class="card">
+                    <div class="card-body text-center text-muted py-4">
+                        <p>You haven't created any listings yet.</p>
+                        <a href="/listings/new" class="btn btn-outline-dark btn-sm">Create your first listing</a>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                    <% for(let listing of myListings) { %>
+                        <div class="col">
+                            <a href="/listings/<%= listing._id %>" style="text-decoration: none;">
+                                <div class="card h-100 homecard">
+                                    <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>" style="height: 12rem; object-fit: cover;" />
+                                    <div class="card-body">
+                                        <h6 class="card-text"><%= listing.title %></h6>
+                                        <p class="card-text text-muted" style="font-size: 0.85rem;"><%= listing.location %>, <%= listing.country %></p>
+                                        <p class="card-text" style="font-weight: bold;">&#8377;<%= listing.price.toLocaleString("en-In") %>/night</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+
+        <hr>
+
+        <!-- My Reviews -->
+        <div class="mb-4">
+            <h4>My Reviews (<%= myReviews.length %>)</h4>
+
+            <% if(myReviews.length === 0) { %>
+                <div class="card">
+                    <div class="card-body text-center text-muted py-4">
+                        <p>You haven't written any reviews yet.</p>
+                        <a href="/listings" class="btn btn-outline-dark btn-sm">Browse listings to leave a review</a>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="row g-3">
+                    <% for(let review of myReviews) { %>
+                        <div class="col-12 col-md-6">
+                            <div class="card review-card">
+                                <div class="card-body">
+                                    <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                                    <p class="card-text"><%= review.comment %></p>
+                                    <small class="text-muted">Posted on <%= review.created_at.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></small>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+</div>
