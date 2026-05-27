@@ -89,10 +89,10 @@ p {
 }
 
 .btn-search {
-    background: var(--primary-color);
-    color: white;
-    border-radius: 30px;
-    padding: 0 1.8rem;
+    background-color: #fe424d;
+    color: #fff;
+    border-radius: 25px;
+    padding: 0.4rem 1rem;
     font-weight: 600;
     border: none;
     box-shadow: 0 4px 14px rgba(254, 66, 77, 0.4);
@@ -116,13 +116,16 @@ p {
 }
 
 /* General Buttons */
+.btn {
+    border-radius: 8px;
+    padding: 0.4rem 1.2rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
 .btn-dark {
     background-color: var(--text-main);
     color: #ffffff;
-    border-radius: 14px;
-    padding: 0.7rem 1.8rem;
-    font-weight: 600;
-    transition: all var(--transition-fast);
     border: none;
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
 }
@@ -134,7 +137,7 @@ p {
     box-shadow: 0 8px 16px rgba(15, 23, 42, 0.3);
 }
 
-.btn-dark:active {
+.btn:active {
     transform: scale(0.96);
 }
 
@@ -283,10 +286,12 @@ p {
 /* Show Page Specifics */
 .showbtns {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 15px;
     margin-top: 20px;
     margin-bottom: 30px;
+    width: 100%;
 }
 
 .showbtns button, .showbtns a {
@@ -480,7 +485,8 @@ p {
 
 [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, 
 [data-theme="dark"] h4, [data-theme="dark"] h5, [data-theme="dark"] h6,
-[data-theme="dark"] p, [data-theme="dark"] span:not(.navbar-toggler-icon) {
+[data-theme="dark"] p, [data-theme="dark"] span:not(.navbar-toggler-icon),
+[data-theme="dark"] label, [data-theme="dark"] .form-label {
     color: var(--text-main);
 }
 

@@ -64,7 +64,7 @@
     </a>
     </div>
 
- <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+ <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 mt-1">
     <% if(allLists.length === 0) { %>
         <div class="col-12 text-center mt-5">
             <h3>No listings found</h3>
@@ -79,21 +79,23 @@
         </div>
     <% } else { %>
     <% for(let listing of allLists) { %>
-    <div class="card col homecard" style="position: relative;">
-        <a href="/listings/<%=listing._id%>" style="text-decoration: none;">
-            <img src="<%=listing.image.url%>" class="card-img-top" alt="<%=listing.title%>" style="height: 20rem;"  />
-            <div class="card-body">
-                <h5 class="card-text"><%=listing.title%></h5>
-                <p class="card-text"><%=listing.location%></p>
-                <p class="card-text" style="font-weight: bold;">&#8377;<%=listing.price.toLocaleString("en-In")%>/night</p>
-            </div>
-        </a>
-        <% if(currUser) { %>
-        <button class="wishlist-btn" data-id="<%= listing._id %>"
-            onclick="toggleWishlist(event, '<%= listing._id %>')">
-            <i class="<%= wishlist.includes(listing._id.toString()) ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
-        </button>
-        <% } %>
+    <div class="col">
+        <div class="card homecard h-100" style="position: relative;">
+            <a href="/listings/<%=listing._id%>" style="text-decoration: none;">
+                <img src="<%=listing.image.url%>" class="card-img-top" alt="<%=listing.title%>" style="height: 20rem; object-fit: cover;"  />
+                <div class="card-body">
+                    <h5 class="card-text"><%=listing.title%></h5>
+                    <p class="card-text"><%=listing.location%></p>
+                    <p class="card-text" style="font-weight: bold;">&#8377;<%=listing.price.toLocaleString("en-In")%>/night</p>
+                </div>
+            </a>
+            <% if(currUser) { %>
+            <button class="wishlist-btn" data-id="<%= listing._id %>"
+                onclick="toggleWishlist(event, '<%= listing._id %>')">
+                <i class="<%= wishlist.includes(listing._id.toString()) ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+            </button>
+            <% } %>
+        </div>
     </div>
   <% } } %>
 </div>
