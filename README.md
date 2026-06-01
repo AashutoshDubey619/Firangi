@@ -1,118 +1,75 @@
-# Firangi
+# 🌍 Firangi - Property Marketplace
 
-Firangi is a Full stack web application for listing and exploring rental properties and accommodations. Users can browse listings, create new listings, leave reviews, and manage their accounts.
+Firangi is a robust, full-stack property marketplace application that allows users to discover, list, and review rental accommodations worldwide. Built with performance, security, and user experience in mind, it features a modern glassmorphism UI, interactive wishlists, advanced search capabilities, and a seamless persistent dark mode.
 
-## Live Link
+## 🔗 Live Demo
+**[Insert your AWS EC2 IP or domain name here]**
 
-**https://firangi-akd.onrender.com**
+---
 
-## 🚀 Run Locally with Docker (Recommended)
+## ✨ Key Features
 
-This project is fully containerized and includes a `docker-compose.yml` file for easy setup. You can run the entire application with a single command.
+- **Modern UI/UX:** Responsive glassmorphism aesthetic built with custom CSS, EJS, and Bootstrap.
+- **Dark Mode:** Seamless, persistent dark theme with local storage integration.
+- **Interactive Wishlist:** Asynchronous save-to-wishlist functionality for logged-in users.
+- **Advanced Search & Filters:** Regex-based multi-field search (title, location, country) and dynamic category filtering.
+- **Optimized Performance:** Server-side pagination and strategic MongoDB indexing for rapid query responses.
+- **Security First:** Fortified with Helmet.js (security headers), express-rate-limit (brute-force protection), and express-mongo-sanitize (NoSQL injection prevention).
+- **User Authentication:** Secure sessions using Passport.js with password hashing.
+- **RESTful CRUD:** Complete property and review management systems with authorization guards.
+- **Image Handling:** Supports both URL-based image links and file uploads via Cloudinary & Multer.
+
+---
+
+## 🛠️ Technologies Used
+
+- **Frontend:** HTML, CSS, Bootstrap, EJS, JavaScript (Fetch API)
+- **Backend:** Node.js, Express.js (v5)
+- **Database:** MongoDB Atlas, Mongoose
+- **Authentication:** Passport.js, express-session
+- **Security:** Helmet.js, express-rate-limit, express-mongo-sanitize
+- **Deployment & DevOps:** AWS EC2, Nginx (Reverse Proxy), PM2 (Process Management), Docker & Docker Compose
+
+---
+
+## 🚀 Run Locally
+
+This project is fully containerized with Docker, making local setup a breeze. 
 
 ### Prerequisites
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed on your machine.
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
 
 ### Instructions
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/AashutoshDubey619/Firangi.git](https://github.com/AashutoshDubey619/Firangi.git)
-    cd Firangi
-    ```
 
-2.  **Create your environment file:**
-    This project uses an `.env` file for secrets. An example is provided; you can copy it to get started.
-    ```bash
-    # For Windows (in Command Prompt)
-    copy example.env .env
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/AashutoshDubey619/Firangi.git
+   cd Firangi
+   ```
 
-    # For Windows (in PowerShell)
-    Copy-Item example.env .env
+2. **Setup Environment Variables:**
+   Create a `.env` file in the root directory and add your credentials:
+   ```env
+   ATLASDB_URL=your_mongodb_atlas_connection_string
+   SECRET=your_session_secret_string
+   # Optional: Add Cloudinary keys for image uploads
+   # CLOUD_NAME=your_cloud_name
+   # CLOUD_API_KEY=your_api_key
+   # CLOUD_API_SECRET=your_api_secret
+   ```
 
-    # For Mac/Linux
-    cp example.env .env
-    ```
-    
-3.  **Edit your `.env` file:**
-    Open the newly created `.env` file and fill in all your secrets (your `ATLASDB_URL`, `CLOUDINARY_KEY`, `CLOUDINARY_SECRET`, etc.).
-
-4.  **Run the application:**
-    This command will build the Docker image, download the dependencies, and start the application.
-    ```bash
-    docker compose up --build
-    ```
-    
-The application will be available at **`http://localhost:8081`**. (Note: it runs on port 8081 to avoid conflicts with other local servers).
-
-To stop the application, press `Ctrl + C` in the terminal.
+3. **Run with Docker Compose:**
+   ```bash
+   docker-compose up --build -d
+   ```
+   The application will be running at `http://localhost:8081`.
 
 ---
 
-## Features
+## ☁️ Deployment (AWS EC2)
 
--   **Dockerized:** Fully containerized for consistent, one-command setup.
--   **User Authentication:** Secure signup, login, and logout using Passport.js.
--   **RESTful CRUD:** Create, Read, Update, and Delete property listings.
--   **Image Uploads:** Seamless image uploads to Cloudinary using Multer.
--   **Reviews:** Users can create and delete reviews for listings.
--   **Dynamic Search:** Search for listings by title.
--   **Flash Messages:** Provides user feedback for success and error actions.
--   **Responsive Design:** Built with Bootstrap and EJS for a responsive UI.
-
-## Technologies Used
-
--   **Containerization:** Docker & Docker Compose
--   **Backend:** Node.js, Express.js
--   **Database:** MongoDB (via Mongoose)
--   **Templating:** EJS, ejs-mate
--   **Authentication:** Passport.js, Passport-Local
--   **File Storage:** Cloudinary, Multer
--   **Validation:** Joi
--   **Middleware:** connect-flash, method-override, express-session
-
-## Folder Structure
-
--   `controllers/` - Route handler logic
--   `Models/` - Mongoose schemas and models
--   `routes/` - Express route definitions
--   `views/` - EJS templates for rendering UI
--   `public/` - Static assets like CSS, JS, images
--   `utils/` - Utility functions and middleware
--   `Dockerfile` - Instructions to build the application image.
--   `docker-compose.yml` - Defines and runs the multi-container application.
--   `.dockerignore` - Specifies files to ignore during the Docker build.
-
----
-
-## (Legacy) Manual Installation
-
-These instructions are for running the application directly on your machine without Docker.
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/AashutoshDubey619/Firangi.git](https://github.com/AashutoshDubey619/Firangi.git)
-    ```
-2.  **Navigate to the project directory:**
-    ```bash
-    cd Firangi
-    ```
-3.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-4.  **Set up environment variables:**
-    -   Create a `.env` file in the root directory.
-    -   Add necessary variables: `ATLASDB_URL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_KEY`, `CLOUDINARY_SECRET`, `SECRET`.
-
-5.  **Start the server:**
-    ```bash
-    # For development (with auto-restart)
-    nodemon app.js
-    
-    # For production
-    npm start
-    ```
-6.  **Usage:**
-    -   Access the application at `http://localhost:8080`.
-
-
+This application is architected for production deployment on AWS EC2.
+1. Provision an **Ubuntu** EC2 instance.
+2. Clone the repository and install dependencies (`npm install`).
+3. Use **PM2** to manage the Node.js process: `pm2 start app.js --name firangi`.
+4. Configure **Nginx** as a reverse proxy to forward traffic from port 80 to port 3000.
