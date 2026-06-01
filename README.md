@@ -3,7 +3,7 @@
 Firangi is a robust, full-stack property marketplace application that allows users to discover, list, and review rental accommodations worldwide. Built with performance, security, and user experience in mind, it features a modern glassmorphism UI, interactive wishlists, advanced search capabilities, and a seamless persistent dark mode.
 
 ## 🔗 Live Demo
-**[Insert your AWS EC2 IP or domain name here]**
+**http://13.233.94.76**
 
 ---
 
